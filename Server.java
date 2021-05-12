@@ -57,7 +57,9 @@ public class Server{
                         "<a href=\"sub\"><button style=\"margin-left:5px;margin-top:5px;height: 50px; width:50px; font-size: 20px;\">-</button></a><br/>"+"\n"+
                         "<a href=\"mult\"><button style=\"margin-top:5px;height: 50px; width:50px; font-size: 20px;\">x</button></a>"+"\n"+
                         "<a href=\"div\"><button style=\"margin-left:5px;margin-top:5px;height: 50px; width:50px; font-size: 20px;\">/</button></a>"+"\n"+
-                        "<a href=\"eq\"><button style=\"margin-left:5px;margin-top:5px;height: 50px; width:50px; font-size: 20px;\">=</button></a>"+"\n"+
+                        "<a href=\"eq\"><button style=\"margin-left:5px;margin-top:5px;height: 50px; width:50px; font-size: 20px;\">=</button></a><br/>"+"\n"+
+                        "<a href=\"/\"><button style=\"margin-top:5px;height: 50px; width:90px; font-size: 20px;\">CLEAR</button></a>"+"\n"+
+                        "<a href=\"mem\"><button style=\"margin-left:5px;margin-top:5px;height: 50px; width:70px; font-size: 20px;\">MEM</button></a>"+"\n"+
                         "</center>"+"\n"+
                         "</body>"+"\n"+
                         "</html>";
@@ -67,7 +69,6 @@ public class Server{
             PrintWriter out = new PrintWriter(sock.getOutputStream());
             out.print(res);
             out.flush();
-            out.close();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -205,8 +206,12 @@ public class Server{
                     line = in.readLine();
                 }else if(method.equals("HEAD")){
                     // SEND SERVER INFORMATION IN HEADERS
+                    handleHead(sock);
+                    break;
                 }else if(method.equals("OPTIONS")){
                     // SEND AVAILABLE HTTP METHODS IN HEADERS
+                    handleOptions(sock);
+                    break;
                 }
             }
         }catch(Exception e){
@@ -221,4 +226,54 @@ public class Server{
         return res;
         // -------------------------------------------------------------
     }
+
+    private static void handleHead(Socket s){
+    	// ----------- SEND HEADERS IN HTTP RESPONSE TO CLIENT -----------
+    	String res = 	"HTTP/1.1 200 OK"+"\n"+
+    					"Server: HTTP Calculator"+"\n"+
+    					"Host: localhost:"+port+"\n"+
+    					"X-Powered-By: Java\n\n";
+        try{
+            PrintWriter out = new PrintWriter(s.getOutputStream());
+            out.print(res);
+            out.flush();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        // ---------------------------------------------------------------
+    }
+
+    private static void handleOptions(Socket s){
+    	// ----------- SEND OPTIONS IN HTTP RESPONSE TO CLIENT -----------
+    	String res = 	"HTTP/1.1 200 OK"+"\n"+
+    					"Allow: GET HEAD OPTIONS"+"\n"+
+    					"Server: HTTP Calculator"+"\n"+
+    					"Host: localhost:"+port+"\n"+
+    					"X-Powered-By: Java\n\n";
+        try{
+            PrintWriter out = new PrintWriter(s.getOutputStream());
+            out.print(res);
+            out.flush();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        // ---------------------------------------------------------------
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

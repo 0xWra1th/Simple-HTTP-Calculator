@@ -274,7 +274,8 @@ public class Server{
                         break;
                     }else if(url.equals("/mem")){
                         System.out.println("mem");
-
+                        handleInput("mem");
+                        serveWebsite(sock);
                     }else if(url.equals("/eq")){
                         System.out.println("equals");
                         ANSWER = calcAnswer();

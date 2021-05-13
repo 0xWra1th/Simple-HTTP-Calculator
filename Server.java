@@ -23,6 +23,8 @@ public class Server{
     private static boolean running = false;
     private static String ANSWER = "";
     private static String MEMANS = "";
+    private static String[] answerCalculator1 = new String[0];
+    private static String[] answerCalculator2 = new String[0];
     // ------------------------------
 
     public static void main(String[] args){
@@ -274,10 +276,14 @@ public class Server{
                         break;
                     }else if(url.equals("/mem")){
                         System.out.println("mem");
-
+                        handleInput("mem");
+                        serveWebsite(sock);
+                        break;
                     }else if(url.equals("/eq")){
                         System.out.println("equals");
                         ANSWER = calcAnswer();
+                        answerCalculator1 = new String[0];
+                        answerCalculator2 = new String[0];
                         serveWebsite(sock);
                         break;
                     }
@@ -299,11 +305,159 @@ public class Server{
         // --------------------------------------------------------------------
     }
 
+    //helper function for calcAnswer
+    private static void addToArray1(String add){
+        String[] temp = answerCalculator1;
+        int length = answerCalculator1.length;
+        answerCalculator1 = new String[length+1];
+        for(int i = 0; i < temp.length; i++){
+            answerCalculator1[i] = temp[i];
+        }
+        answerCalculator1[answerCalculator1.length-1] = add;
+    }
+    private static void addToArray2(String add){
+        String[] temp = answerCalculator2;
+        int length = answerCalculator2.length;
+        answerCalculator2 = new String[length+1];
+        for(int i = 0; i < temp.length; i++){
+            answerCalculator2[i] = temp[i];
+        }
+        answerCalculator2[answerCalculator2.length-1] = add;
+    }
+    private static void calcValue(int index){
+        int leftNumber = Integer.parseInt(answerCalculator1[index-1]);
+        String operant = answerCalculator1[index];
+        int rightNumber = Integer.parseInt(answerCalculator1[index+1]);
+        int ans = 0;
+
+        if(operant.equals("/")){
+            ans = leftNumber / rightNumber;
+        }else if(operant.equals("x")){
+            ans = leftNumber * rightNumber;
+        }else if(operant.equals("-")){
+            ans = leftNumber - rightNumber;
+        }else{
+            ans = leftNumber + rightNumber;
+        }
+        addToArray2(String.valueOf(ans));
+
+        //loop through the rest of the array and add all the other values to array 2 to do another run through
+        if(index+2 < answerCalculator1.length){
+            for(int i = index+2; i < answerCalculator1.length; i++){
+                addToArray2(answerCalculator1[i]);
+            }
+        }
+    }
+
     private static String calcAnswer(){
         // ------------ CONVERT STRING EQUATION INTO ANSWER ------------
-        String res = "The Answer";
-        return res;
+        String numberTracker = "";
+        String substringHolder = "";
+        boolean finished = true;
+
+        System.out.println(ANSWER);
+
+        if(ANSWER.length() >= 2 && isOperant(ANSWER.substring(ANSWER.length()-1))){
+            if(isOperant(ANSWER.substring(ANSWER.length()-2, ANSWER.length()-1))){
+                ANSWER = ANSWER.substring(0, ANSWER.length()-2);
+            }else{
+                ANSWER = ANSWER.substring(0, ANSWER.length()-1);  
+            }
+        }
+
+        System.out.println(ANSWER);
+
+        //loop to place all the numbers and operants into an array
+        for(int i = 0; i < ANSWER.length(); i++){
+            substringHolder = ANSWER.substring(i, i+1);
+            if(!isOperant(substringHolder)){
+                numberTracker += substringHolder;
+            }else{
+                addToArray1(numberTracker);
+                addToArray1(substringHolder);
+                numberTracker = "";
+            }
+        }
+        addToArray1(numberTracker);
+
+        for(int i = 0; i < answerCalculator1.length; i++){
+            System.out.print(answerCalculator1[i]);
+            System.out.print(",");
+        }
+        System.out.println();
+
+        //loop through the array doing multiply and devision first
+        while(true){
+            //set exit condidtion 
+            finished = true;
+
+            for(int i = 0; i < answerCalculator1.length; i++){
+                if(isOperant(answerCalculator1[i])){
+                    if(answerCalculator1[i].equals("/") || answerCalculator1[i].equals("x")){
+                        calcValue(i);
+                        break;
+                    }else{
+                        addToArray2(answerCalculator1[i-1]);
+                        addToArray2(answerCalculator1[i]);
+                    }
+                }
+            }
+
+            for(int i = 0; i < answerCalculator2.length; i++){
+                System.out.print(answerCalculator2[i]);
+                System.out.print(",");
+                if(answerCalculator2[i].equals("/") || answerCalculator2[i].equals("*")){
+                    finished = false;
+                }
+            }
+            System.out.println();
+            //swap the two arrays over and run through it again for multi or div
+            answerCalculator1 = answerCalculator2;
+            answerCalculator2 = new String[0];
+
+            if(finished){
+                break;
+            }
+        }
+
+        System.out.println("Switching");
+
+        while(true){
+            //set exit condidtion 
+            finished = true;
+
+            for(int i = 0; i < answerCalculator1.length; i++){
+                if(isOperant(answerCalculator1[i])){
+                    if(answerCalculator1[i].equals("-") || answerCalculator1[i].equals("+")){
+                        calcValue(i);
+                        break;
+                    }else{
+                        addToArray2(answerCalculator1[i-1]);
+                        addToArray2(answerCalculator1[i]);
+                    }
+                }
+            }
+
+            for(int i = 0; i < answerCalculator2.length; i++){
+                System.out.print(answerCalculator2[i]);
+                System.out.print(",");
+                if(answerCalculator2[i].equals("+") || answerCalculator2[i].equals("-")){
+                    finished = false;
+                }
+            }
+            System.out.println();
+
+            if(finished){
+                break;
+            }
+            else{
+                //swap the two arrays over and run through it again for multi or div
+                answerCalculator1 = answerCalculator2;
+                answerCalculator2 = new String[0];
+            }
+        }
         // -------------------------------------------------------------
+        return null;
     }
 
     private static void handleHead(Socket s){

@@ -22,6 +22,7 @@ public class Server{
     private static int port;
     private static boolean running = false;
     private static String ANSWER = "";
+    private static String MEMANS = "";
     // ------------------------------
 
     public static void main(String[] args){
@@ -111,6 +112,81 @@ public class Server{
         // --------------------------------------------------------------
     }
 
+    //helper function
+    private static boolean isOperant(String input){
+        if(input.equals("+") || input.equals("/") || input.equals("-") || input.equals("x")){
+            return true;
+        }else if(input.equals("add") || input.equals("div") || input.equals("sub") || input.equals("mult")){
+            return true;
+        }
+        return false;
+    }
+    private static String getOperant(String input){
+        if(input.equals("sub")){
+            return "-";
+        }else if(input.equals("mult")){
+            return "x";
+        }else if(input.equals("div")){
+            return "/";
+        }else if(input.equals("add")){
+            return "+";
+        }
+        return null;
+    }
+
+    //function for creating the string of calculation operators
+    private static void handleInput(String input){
+        //exceptions: 01, +*, 
+        int lengthOfAnswer = ANSWER.length();
+        try{
+            if(isOperant(input)){
+                //check that operator is not the first input
+                if(lengthOfAnswer == 1){
+                    ANSWER += getOperant(input);
+                }else if(lengthOfAnswer >= 2){
+                    //get substrings 
+                    String sub1 = ANSWER.substring(lengthOfAnswer-1);
+                    String sub2 = ANSWER.substring(lengthOfAnswer-2, lengthOfAnswer-1);
+
+                    if(input.equals("sub")){
+                        System.out.println(sub1);
+                        System.out.println(sub2);
+                        if(!isOperant(sub2) && isOperant(sub1)){
+                            ANSWER += getOperant(input);
+                        }else if(isOperant(sub2) && !isOperant(sub1)){
+                            ANSWER += getOperant(input);
+                        } else if(!isOperant(sub2) && !isOperant(sub1)){
+                            ANSWER += getOperant(input);
+                        }
+                    }else{
+                        if(!isOperant(sub1)){
+                            ANSWER += getOperant(input);
+                        }
+                    }
+                }
+            }else if(input.equals("mem")){
+                ANSWER += MEMANS;
+            }else{
+                if(lengthOfAnswer >= 2){
+                    String sub1 = ANSWER.substring(lengthOfAnswer-1);
+                    String sub2 = ANSWER.substring(lengthOfAnswer-2, lengthOfAnswer-1);
+
+                    if(isOperant(sub1) && !input.equals("0")){
+                        ANSWER += input;
+                    }else if(!isOperant(sub1)){
+                        ANSWER += input;
+                    }
+                }else{
+                    if(!input.equals("0")){
+                        ANSWER += input;
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static void handleRequest(BufferedReader in, Socket sock){
         // ------------ READ THROUGH HEADERS AND DETERMINE ACTIONS ------------
         try{
@@ -123,72 +199,72 @@ public class Server{
                         break;
                     }else if(url.equals("/0")){
                         System.out.println("0");
-                        ANSWER = ANSWER+"0";
+                        handleInput("0");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/1")){
                         System.out.println("1");
-                        ANSWER = ANSWER+"1";
+                        handleInput("1");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/2")){
                         System.out.println("2");
-                        ANSWER = ANSWER+"2";
+                        handleInput("2");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/3")){
                         System.out.println("3");
-                        ANSWER = ANSWER+"3";
+                        handleInput("3");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/4")){
                         System.out.println("4");
-                        ANSWER = ANSWER+"4";
+                        handleInput("4");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/5")){
                         System.out.println("5");
-                        ANSWER = ANSWER+"5";
+                        handleInput("5");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/6")){
                         System.out.println("6");
-                        ANSWER = ANSWER+"6";
+                        handleInput("6");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/7")){
                         System.out.println("7");
-                        ANSWER = ANSWER+"7";
+                        handleInput("7");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/8")){
                         System.out.println("8");
-                        ANSWER = ANSWER+"8";
+                        handleInput("8");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/9")){
                         System.out.println("9");
-                        ANSWER = ANSWER+"9";
+                        handleInput("9");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/add")){
                         System.out.println("add");
-                        ANSWER = ANSWER+"+";
+                        handleInput("add");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/sub")){
                         System.out.println("sub");
-                        ANSWER = ANSWER+"-";
+                        handleInput("sub");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/mult")){
                         System.out.println("mult");
-                        ANSWER = ANSWER+"x";
+                        handleInput("mult");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/div")){
                         System.out.println("div");
-                        ANSWER = ANSWER+"/";
+                        handleInput("div");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/")){
@@ -196,6 +272,9 @@ public class Server{
                         ANSWER = "";
                         serveWebsite(sock);
                         break;
+                    }else if(url.equals("/mem")){
+                        System.out.println("mem");
+
                     }else if(url.equals("/eq")){
                         System.out.println("equals");
                         ANSWER = calcAnswer();

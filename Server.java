@@ -397,8 +397,14 @@ public class Server{
                         calcValue(i);
                         break;
                     }else{
-                        addToArray2(answerCalculator1[i-1]);
-                        addToArray2(answerCalculator1[i]);
+                        if(i+2 > answerCalculator1.length-1){
+                            addToArray2(answerCalculator1[i-1]);
+                            addToArray2(answerCalculator1[i]);
+                            addToArray2(answerCalculator1[i+1]);
+                        }else{
+                            addToArray2(answerCalculator1[i-1]);
+                            addToArray2(answerCalculator1[i]);
+                        }
                     }
                 }
             }
@@ -406,7 +412,7 @@ public class Server{
             for(int i = 0; i < answerCalculator2.length; i++){
                 System.out.print(answerCalculator2[i]);
                 System.out.print(",");
-                if(answerCalculator2[i].equals("/") || answerCalculator2[i].equals("*")){
+                if(answerCalculator2[i].equals("/") || answerCalculator2[i].equals("x")){
                     finished = false;
                 }
             }
@@ -422,9 +428,15 @@ public class Server{
 
         System.out.println("Switching");
 
+        //loop through the array doing the sum and sub
         while(true){
             //set exit condidtion 
             finished = true;
+
+            //check that there are sums and subs
+            if(answerCalculator1.length == 1){
+                break;
+            }
 
             for(int i = 0; i < answerCalculator1.length; i++){
                 if(isOperant(answerCalculator1[i])){
@@ -447,17 +459,17 @@ public class Server{
             }
             System.out.println();
 
+            //swap the two arrays over and run through it again for multi or div
+            answerCalculator1 = answerCalculator2;
+            answerCalculator2 = new String[0];
+
             if(finished){
                 break;
             }
-            else{
-                //swap the two arrays over and run through it again for multi or div
-                answerCalculator1 = answerCalculator2;
-                answerCalculator2 = new String[0];
-            }
         }
         // -------------------------------------------------------------
-        return null;
+        MEMANS = answerCalculator1[0];
+        return answerCalculator1[0];
     }
 
     private static void handleHead(Socket s){

@@ -151,8 +151,8 @@ public class Server{
                     String sub2 = ANSWER.substring(lengthOfAnswer-2, lengthOfAnswer-1);
 
                     if(input.equals("sub")){
-                        System.out.println(sub1);
-                        System.out.println(sub2);
+                        //System.out.println(sub1);
+                        //System.out.println(sub2);
                         if(!isOperant(sub2) && isOperant(sub1)){
                             ANSWER += getOperant(input);
                         }else if(isOperant(sub2) && !isOperant(sub1)){
@@ -200,94 +200,94 @@ public class Server{
                     if(url.equals("/favicon.ico")){ //IGNORE FAVICON REQUESTS...
                         break;
                     }else if(url.equals("/0")){
-                        System.out.println("0");
+                        //System.out.println("0");
                         handleInput("0");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/1")){
-                        System.out.println("1");
+                        //System.out.println("1");
                         handleInput("1");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/2")){
-                        System.out.println("2");
+                        //System.out.println("2");
                         handleInput("2");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/3")){
-                        System.out.println("3");
+                        //System.out.println("3");
                         handleInput("3");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/4")){
-                        System.out.println("4");
+                        //System.out.println("4");
                         handleInput("4");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/5")){
-                        System.out.println("5");
+                        //System.out.println("5");
                         handleInput("5");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/6")){
-                        System.out.println("6");
+                        //System.out.println("6");
                         handleInput("6");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/7")){
-                        System.out.println("7");
+                        //System.out.println("7");
                         handleInput("7");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/8")){
-                        System.out.println("8");
+                        //System.out.println("8");
                         handleInput("8");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/9")){
-                        System.out.println("9");
+                        //System.out.println("9");
                         handleInput("9");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/add")){
-                        System.out.println("add");
+                        //System.out.println("add");
                         handleInput("add");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/sub")){
-                        System.out.println("sub");
+                        //System.out.println("sub");
                         handleInput("sub");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/mult")){
-                        System.out.println("mult");
+                        //System.out.println("mult");
                         handleInput("mult");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/div")){
-                        System.out.println("div");
+                        //System.out.println("div");
                         handleInput("div");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/")){
-                        System.out.println("RESET");
+                        //System.out.println("RESET");
                         ANSWER = "";
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/mem")){
-                        System.out.println("mem");
+                        //System.out.println("mem");
                         handleInput("mem");
                         serveWebsite(sock);
                         break;
                     }else if(url.equals("/eq")){
-                        System.out.println("equals");
+                        //System.out.println("equals");
                         ANSWER = calcAnswer();
                         answerCalculator1 = new String[0];
                         answerCalculator2 = new String[0];
                         serveWebsite(sock);
                         break;
                     }
-                    System.out.println(line);
+                    //System.out.println(line);
                     line = in.readLine();
                 }else if(method.equals("HEAD")){
                     // SEND SERVER INFORMATION IN HEADERS
@@ -355,7 +355,7 @@ public class Server{
         String substringHolder = "";
         boolean finished = true;
 
-        System.out.println(ANSWER);
+        //System.out.println(ANSWER);
 
         if(ANSWER.length() >= 2 && isOperant(ANSWER.substring(ANSWER.length()-1))){
             if(isOperant(ANSWER.substring(ANSWER.length()-2, ANSWER.length()-1))){
@@ -365,7 +365,7 @@ public class Server{
             }
         }
 
-        System.out.println(ANSWER);
+        //System.out.println(ANSWER);
 
         //loop to place all the numbers and operants into an array
         for(int i = 0; i < ANSWER.length(); i++){
@@ -380,11 +380,11 @@ public class Server{
         }
         addToArray1(numberTracker);
 
-        for(int i = 0; i < answerCalculator1.length; i++){
+        /*for(int i = 0; i < answerCalculator1.length; i++){
             System.out.print(answerCalculator1[i]);
             System.out.print(",");
         }
-        System.out.println();
+        System.out.println();*/
 
         //loop through the array doing multiply and devision first
         while(true){
@@ -410,13 +410,13 @@ public class Server{
             }
 
             for(int i = 0; i < answerCalculator2.length; i++){
-                System.out.print(answerCalculator2[i]);
-                System.out.print(",");
+                //System.out.print(answerCalculator2[i]);
+                //System.out.print(",");
                 if(answerCalculator2[i].equals("/") || answerCalculator2[i].equals("x")){
                     finished = false;
                 }
             }
-            System.out.println();
+            //System.out.println();
             //swap the two arrays over and run through it again for multi or div
             answerCalculator1 = answerCalculator2;
             answerCalculator2 = new String[0];
@@ -426,7 +426,7 @@ public class Server{
             }
         }
 
-        System.out.println("Switching");
+        //System.out.println("Switching");
 
         //loop through the array doing the sum and sub
         while(true){
@@ -451,13 +451,13 @@ public class Server{
             }
 
             for(int i = 0; i < answerCalculator2.length; i++){
-                System.out.print(answerCalculator2[i]);
-                System.out.print(",");
+                //System.out.print(answerCalculator2[i]);
+                //System.out.print(",");
                 if(answerCalculator2[i].equals("+") || answerCalculator2[i].equals("-")){
                     finished = false;
                 }
             }
-            System.out.println();
+            //System.out.println();
 
             //swap the two arrays over and run through it again for multi or div
             answerCalculator1 = answerCalculator2;

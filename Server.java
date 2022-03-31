@@ -1,11 +1,7 @@
 /* 
-TODO:
-    1) Convert string equation into answer
-    2) Allow for multiple users...maybe
-    3) Add a clear button?
-    4) Add a memory function?
-    5) Add brackets?
-    6) Add more headers so I look like I know what I'm doing.
+Authors: Daniel Scragg and Johan de Clercq
+Info:
+    A simple special purpose HTTP server that serves a calculator
 */
 //IMPORTS
 import java.io.BufferedReader;
